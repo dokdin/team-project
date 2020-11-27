@@ -21,9 +21,9 @@ library(raster)
 library(showtext)
 
 # 파일불러오기
-df<-read.csv("c:/data/team/rent.csv")
-seoulid<-read.csv("c:/data/team/seoul_id.csv")
-gu_name <- read.csv("c:/data/team/gu_name.csv",
+df<-read.csv("c:/data/project/team/raw/rent.csv")
+seoulid<-read.csv("c:/data/project/team/raw/seoul_id.csv")
+gu_name <- read.csv("c:/data/project/team/raw/gu_name.csv",
                        header = TRUE)
 
 # 파일확인
@@ -36,13 +36,14 @@ View(gu_name)
 dim(seoulid)
 dim(gu_name)
 dim(df)
+str(seoulid)
+str(gu_name)
+str(df)
 
 # 변수명이 깨지는 걸 방지하여 한글 변수명 변경
 names(df)<-c('seoulgu','seouldong','avg','first','etc')
 names(seoulid)<-c('seoulgu','id')
 
-str(df)
-str(seoulid)
 
 # 구별로 시군구별 평균 임대가격 mean으로 요약하고 저장 
 View(df)
@@ -51,12 +52,7 @@ seoul_gu<-df %>%
     summarise(mean_seoul_gu=round(mean(avg),2))
 
 
-View(seoul_gu)
-
-
 # seoul_gu<-as.numeric(seoul_gu$mean_seoul_gu)
-
-
 View(seoulid)
 str(seoul_gu)
 
@@ -68,7 +64,7 @@ seoul <- left_join(seoul_gu, seoulid, by = "seoulgu")
 View(seoul)
 
 # 우리나라 지도 GIS포맷
-map_shape <- shapefile("c:/data/team/TL_SCCO_SIG.shp")
+map_shape <- shapefile("c:/data/project/team/raw/TL_SCCO_SIG.shp")
 map <- fortify(map_shape, region = "SIG_CD")
 View(map)
 
@@ -84,11 +80,9 @@ View(M)
 # M2<-M %>%
 #     group_by(id)%>%
 #     summarise(mean_lat=mean(lat))
+# write.csv(M2,"c:/data/team/lat.csv",row.names=FALSE)
 
-# View(M2)
-# # write.csv(M2,"c:/data/team/lat.csv",row.names=FALSE)
-
-#글꼴
+#구글 폰트
 font_add_google('Nanum Pen Script', 'pen')
 font_add_google('Jua','pen2')
 font_add_google('Do Hyeon','pen3')
